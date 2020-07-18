@@ -1,0 +1,78 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Narative Visualization</title>
+    <meta name="description" content="Narative Visualization">
+    <meta name="author" content="Jason Vettese">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<body onload="init()">
+    <div style="text-align: center;">
+        <h1>Average Highway MPG vs Average City MPG</h1>
+       
+        <div>
+            <select id="dropdown"></select>
+        </div>
+        
+        <svg height=800 width=1200></svg>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-link" href="second.html">Previous</a>
+        </nav>
+        
+    </div>
+    
+    <script>
+        async function init() {
+            var margin = 100; var height = 650; var width = 1000;
+
+            var data = await d3.csv("https://flunky.github.io/cars2017.csv");
+
+            var make = (data.map((d) => d.Make))
+                            .filter(function(item, pos, self) { return self.indexOf(item) == pos; });
+            var x = d3.scaleLog().domain([10,150]).range([0,width]);
+            var y = d3.scaleBand().domain(make.reverse()).range([height,0]);
+
+            d3.select("svg").append("g")
+                .attr("transform", "translate(" + margin + "," + 0 + ")")
+                .call(d3.axisLeft(y));
+
+            d3.select("svg").append("g")
+                .attr("transform", "translate(" + margin + "," + (height) + ")")
+                .call(d3.axisBottom(x).tickValues([10,20,50,100]).tickFormat( d3.format("~s")));
+
+            // d3.select("svg").append("g")
+            //     .attr("transform", "translate(" + margin + "," + 0 + ")")
+            //     .selectAll("dot")
+            //     .data(data)
+            //     .enter()
+            //     .append("circle")
+            //     .attr("cx", function (d) { return x(d.AverageHighwayMPG); } )
+            //     .attr("cy", function (d) { return y(d.AverageCityMPG); } )
+            //     .attr("r", function(d) {return +(d.EngineCylinders) + 2;});
+
+        }
+    </script>
+
+</body>
+
+</html>
