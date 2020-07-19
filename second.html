@@ -64,7 +64,46 @@
             var x = d3.scaleLog().domain([10,150]).range([0,width]);
             var y = d3.scaleBand().domain(make.reverse()).rangeRound([height,0]);
             var z = d3.scaleLinear().domain([0,12]).range(["blue", "red"]);
+
             
+            // Tooltip events
+            var tooltip = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0)
+                .style("background-color", "grey")
+                .style("color", "white")
+                .style("border", "solid")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "5px");
+
+            var mouseover = function(d) {
+                tooltip.style("opacity", 1)
+                d3.select(this)
+                    .style("stroke", "black")
+                    .style("opacity", 1)
+            }
+
+            var mousemove = function(d) {
+                tooltip.html("Vehicle Info: <br/>" +
+                                "--------------------<br/>" +
+                                "Make: " + d.Make + "<br/>" +
+                                "Avg Hway MPG: " + d.AverageHighwayMPG + "<br/>" +
+                                "Avg City MPG: " + d.AverageCityMPG + "<br/>" +
+                                "No. Cylinders: " + d.EngineCylinders + "<br/>"
+                            )
+                    .style("left", (d3.mouse(this)[0]) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+            }
+
+            var mouseleave = function(d) {
+                tooltip.style("opacity", 0)
+                d3.select(this)
+                    .style("stroke", "none")
+                    .style("opacity", 0.8)
+            }
+            // end of tooltip
+
 
             d3.select("svg").append("g")
                 .attr("transform", "translate(" + margin + "," + 0 + ")")
@@ -102,9 +141,23 @@
                 .attr("cx", function (d) { return x(d.AverageHighwayMPG); } )
                 .attr("cy", function (d) { return y(d.Make); } )
                 .attr("r", y.bandwidth()/2)
-                .attr("fill", function (d) { return z(d.EngineCylinders); });
+                .attr("fill", function (d) { return z(d.EngineCylinders); })
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave);
+                // .on("mouseover", function(d) {		
+                //     tooltip.transition()		
+                //         .style("opacity", 1);		
+                //     tooltip.html("Make: " + d.Make + "<br/> Avg Hway MPG: "  + d.AverageHighwayMPG)	
+                //         .style("x", y(d.Make) + "px")		
+                //         .style("y", x(d.AverageHighwayMPG) + "px");	
+                //     })					
+                // .on("mouseout", function(d) {		
+                //     tooltip.transition()		
+                //         .style("opacity", 0);	
+                // });
 
-                function update(group) {
+            function update(group) {
                 var dFilter;
 
                 if (group == "Select No. Cylinders")
@@ -134,7 +187,10 @@
                     .attr("cx", function (d) { return x(d.AverageHighwayMPG); } )
                     .attr("cy", function (d) { return y(d.Make); } )
                     .attr("r", y.bandwidth()/2)
-                    .attr("fill", function (d) { return z(d.EngineCylinders); });
+                    .attr("fill", function (d) { return z(d.EngineCylinders); })
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave);
 
             }
             
