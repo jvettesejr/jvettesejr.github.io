@@ -27,7 +27,7 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <body onload="init()">
     <div style="text-align: center;">
-        <h1>Average Highway MPG vs Make</h1>
+        <h3>Average Highway MPG vs Make</h3>
        
         <p style="margin-left: 500px; margin-right: 500px;">
             Let's take a look at the highway perforamance for the 2017 line of cars. Notice, the blue points
@@ -181,7 +181,7 @@
                 .attr("y", function(d,i){ return i*(20)+5})
                 .text(function(d) {
                     if(d == 0)
-                        return "electric";
+                        return "Electric";
                     else
                         return (d + " cylinders");
                 })
