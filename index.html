@@ -54,13 +54,16 @@
     
     <script>
         async function init() {
-            var margin = 50; var height = 600; var width = 1000;
+            var margin = 50; var height = 600; var width = 900;
 
             var data = await d3.csv("https://flunky.github.io/cars2017.csv");
 
             var make = (data.map((d) => d.Make))
                             .filter(function(item, pos, self) { return self.indexOf(item) == pos; });
             make.unshift("Select Make");
+            var cyl = (data.map((d) => d.EngineCylinders))
+                            .filter(function(item, pos, self) { return self.indexOf(item) == pos; });
+            cyl.sort()            
 
             d3.select("#dropdown").selectAll("myOptions").data(make).enter()
                 .append('option')
@@ -149,6 +152,48 @@
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave);
+
+            d3.select("svg").append("g")
+                .attr("transform", "translate(" + (margin+width+50) + "," + 12 + ")")
+                .selectAll("legendtext")
+                .data(cyl)
+                .enter()
+                .append("text")
+                .attr("x", 0)
+                .attr("y", 0)
+                .text("No. of Cylinders")
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle");
+
+            d3.select("svg").append("g")
+                .attr("transform", "translate(" + (margin+width+50) + "," + 30 + ")")
+                .selectAll("legend")
+                .data(cyl)
+                .enter()
+                .append("rect")
+                .attr("x", 0)
+                .attr("y", function(d,i){ return i*(20)})
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("fill", function(d){ return z(d);});
+
+                d3.select("svg").append("g")
+                .attr("transform", "translate(" + (margin+width+65) + "," + 30 + ")")
+                .selectAll("legendtext")
+                .data(cyl)
+                .enter()
+                .append("text")
+                .attr("x", 0)
+                .attr("y", function(d,i){ return i*(20)+5})
+                .text(function(d) {
+                    if(d == 0)
+                        return "electric";
+                    else
+                        return (d + " cylinders");
+                })
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle");
+      
 
             function update(group) {
                 var dFilter;
