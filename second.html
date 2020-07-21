@@ -232,6 +232,47 @@
                     .on("mousemove", mousemove)
                     .on("mouseleave", mouseleave);
 
+                d3.select("svg").append("g")
+                    .attr("transform", "translate(" + (margin+width+50) + "," + 12 + ")")
+                    .selectAll("legendtext")
+                    .data(cyl.slice(1))
+                    .enter()
+                    .append("text")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .text("No. of Cylinders")
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle");
+
+                d3.select("svg").append("g")
+                    .attr("transform", "translate(" + (margin+width+50) + "," + 30 + ")")
+                    .selectAll("legend")
+                    .data(cyl.slice(1))
+                    .enter()
+                    .append("rect")
+                    .attr("x", 0)
+                    .attr("y", function(d,i){ return i*(20)})
+                    .attr("width", 10)
+                    .attr("height", 10)
+                    .style("fill", function(d){ return z(d);});
+
+                d3.select("svg").append("g")
+                    .attr("transform", "translate(" + (margin+width+65) + "," + 30 + ")")
+                    .selectAll("legendtext")
+                    .data(cyl.slice(1))
+                    .enter()
+                    .append("text")
+                    .attr("x", 0)
+                    .attr("y", function(d,i){ return i*(20)+5})
+                    .text(function(d) {
+                        if(d == 0)
+                            return "Electric";
+                        else
+                            return (d + " cylinders");
+                    })
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle");
+
             }
             
             d3.select("#dropdown").on("change", function(d) {
